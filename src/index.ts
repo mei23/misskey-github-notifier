@@ -82,7 +82,7 @@ handler.on('status', event => {
 handler.on('push', event => {
 	const ref = event.ref;
 	switch (ref) {
-		case 'refs/heads/develop':
+		case 'refs/heads/mei-m544':
 			const pusher = event.pusher;
 			const compare = event.compare;
 			const commits: any[] = event.commits;
