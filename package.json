@@ -7,7 +7,7 @@
   "dependencies": {
     "@types/koa": "2.0.51",
     "@types/koa-bodyparser": "5.0.2",
-    "@types/koa-router": "7.0.42",
+    "@types/koa-router": "7.4.0",
     "@types/node": "12.12.5",
     "@types/request": "2.48.3",
     "crypto": "1.0.1",
