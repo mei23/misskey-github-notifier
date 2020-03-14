@@ -1,5 +1,5 @@
 import * as http from 'http';
-import * as EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as bodyParser from 'koa-bodyparser';
