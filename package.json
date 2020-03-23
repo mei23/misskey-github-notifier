@@ -8,7 +8,7 @@
     "@types/koa": "2.0.51",
     "@types/koa-bodyparser": "5.0.2",
     "@types/koa-router": "7.4.0",
-    "@types/node": "13.9.1",
+    "@types/node": "13.9.3",
     "@types/request": "2.48.4",
     "crypto": "1.0.1",
     "koa": "2.11.0",
