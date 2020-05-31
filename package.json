@@ -16,6 +16,6 @@
     "koa-router": "7.4.0",
     "request": "2.88.2",
     "ts-node": "8.6.2",
-    "typescript": "3.8.3"
+    "typescript": "3.9.3"
   }
 }
