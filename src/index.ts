@@ -47,6 +47,8 @@ app.use(router.routes());
 
 const server = http.createServer(app.callback());
 
+server.requestTimeout = 60 * 1000;
+
 server.listen(config.port);
 
 handler.on('status', event => {
