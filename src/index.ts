@@ -37,6 +37,7 @@ router.post('/github', ctx => {
 	// シグネチャ比較
 	if (sig1.equals(sig2)) {
 		handler.emit(ctx.headers['x-github-event'], ctx.request.body);
+		JSON.stringify(`GitHubHook: ${JSON.stringify(ctx.request.body)}`);
 		ctx.status = 204;
 	} else {
 		ctx.status = 400;
