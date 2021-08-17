@@ -75,9 +75,9 @@ handler.on('status', event => {
 				const parentState = parentStatuses[0].state;
 				const stillFailed = parentState == 'failure' || parentState == 'error';
 				if (stillFailed) {
-					post(`⚠️**BUILD STILL FAILED**⚠️: ?[${commit.commit.message}](${commit.html_url})`);
+					post(`⚠️BUILD STILL FAILED⚠️: ?[${commit.commit.message}](${commit.html_url})`);
 				} else {
-					post(`🚨**BUILD FAILED**🚨: →→→?[${commit.commit.message}](${commit.html_url})←←←`);
+					post(`🚨BUILD FAILED🚨: →→→?[${commit.commit.message}](${commit.html_url})←←←`);
 				}
 			});
 			break;
@@ -92,7 +92,7 @@ handler.on('push', event => {
 			const compare = event.compare;
 			const commits: any[] = event.commits;
 			post([
-				`🆕 Pushed by **${pusher.name}** with ?[${commits.length} commit${commits.length > 1 ? 's' : ''}](${compare}):`,
+				`🆕 Pushed by ${pusher.name} with ?[${commits.length} commit${commits.length > 1 ? 's' : ''}](${compare}):`,
 				commits.reverse().map(commit => `・[?[${commit.id.substr(0, 7)}](${commit.url})] ${commit.message.split('\n')[0]}`).join('\n'),
 			].join('\n'));
 			break;
@@ -129,7 +129,7 @@ handler.on('release', event => {
 	const release = event.release;
 	let text: string;
 	switch (action) {
-		case 'published': text = `🎁 **NEW RELEASE**: [${release.tag_name}](${release.html_url}) is out now. Enjoy!`; break;
+		case 'published': text = `🎁 NEW RELEASE: [${release.tag_name}](${release.html_url}) is out now. Enjoy!`; break;
 		default: return;
 	}
 	post(text, false);
@@ -137,7 +137,7 @@ handler.on('release', event => {
 
 handler.on('watch', event => {
 	const sender = event.sender;
-	post(`(((⭐️))) Starred by **${sender.login}** (((⭐️)))`, false);
+	post(`⭐️ Starred by ${sender.login} ⭐️`, false);
 });
 
 handler.on('fork', event => {
