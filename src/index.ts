@@ -1,7 +1,6 @@
-import * as http from 'http';
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
-import * as bodyParser from 'koa-bodyparser';
+import { createServer } from 'http';
+//import * as h3 from 'h3';
+const h3 = require('h3');
 import * as request from 'request';
 import * as crypto from 'crypto';
 const config = require('../config.json');
@@ -18,39 +17,35 @@ const post = async (text: string, home = true) => {
 	});
 };
 
-const app = new Koa();
-app.use(bodyParser());
-
 const secret = config.hookSecret;
 
-const router = new Router();
+const app = h3.createApp();
+const router = h3.createRouter();
 
-router.post('/github', ctx => {
-	const type = ctx.headers['x-github-event'];
-	const event = ctx.request.body;
+router.post('/github', h3.eventHandler(async h3Event => {
+	const type = h3Event.req.headers['x-github-event'] as string;
+	const event = await h3.readBody(h3Event);
 	const body = JSON.stringify(event);
 	const hash = crypto.createHmac('sha1', secret).update(body).digest('hex');
-	const sig1 = Buffer.from(ctx.headers['x-hub-signature']);
+	const sig1 = Buffer.from(h3Event.req.headers['x-hub-signature'] as string);
 	const sig2 = Buffer.from(`sha1=${hash}`);
 
 	// シグネチャ比較
 	if (sig1.equals(sig2)) {
 		console.log(type, event);
 		handle(type, event);
-		ctx.status = 204;
+		h3Event.res.statusCode = 204;
+		h3Event.res.end();
 	} else {
-		console.log('400');
-		ctx.status = 400;
+		console.log('401');
+		h3Event.res.statusCode = 401;
+		h3Event.res.end();
 	}
-});
+}));
 
-app.use(router.routes());
+app.use(router);
 
-const server = http.createServer(app.callback());
-
-server.requestTimeout = 60 * 1000;
-
-server.listen(config.port);
+const server = createServer(h3.toNodeListener(app)).listen(process.env.PORT || config.port);
 
 async function handle(type: string, event: any) {
 	switch (type) {
