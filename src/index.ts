@@ -43,9 +43,13 @@ router.post('/github', h3.eventHandler(async h3Event => {
 	}
 }));
 
+const server = createServer(h3.toNodeListener(app));
+
 app.use(router);
 
-const server = createServer(h3.toNodeListener(app)).listen(process.env.PORT || config.port);
+server.requestTimeout = 60 * 1000;
+
+server.listen(process.env.PORT || config.port);
 
 async function handle(type: string, event: any) {
 	switch (type) {
