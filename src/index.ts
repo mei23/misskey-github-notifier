@@ -1,18 +1,28 @@
 import { createServer } from 'http';
 //import * as h3 from 'h3';
 const h3 = require('h3');
-import * as request from 'request';
+import fetch from 'node-fetch';
 import * as crypto from 'crypto';
 const config = require('../config.json');
 
 const post = async (text: string, home = true) => {
-	request.post(config.instance + '/api/notes/create', {
-		json: {
+	await fetch(config.instance + '/api/notes/create', {
+		method: 'post',
+		body: JSON.stringify({
 			i: config.i,
 			text,
 			visibility: home ? 'home' : 'public',
 			noExtractMentions: true,
 			noExtractHashtags: true
+		}),
+		headers: {
+			'Content-Type': 'application/json'
+		},
+	}).then(res => {
+		if (!res.ok) {
+			throw `${res.status} ${res.statusText}`;
+		} else {
+			return res.status === 204 ? {} : res.json();
 		}
 	});
 };
@@ -62,26 +72,27 @@ async function handle(type: string, event: any) {
 					const parent = commit.parents[0];
 		
 					// Fetch parent status
-					request({
-						url: `${parent.url}/statuses`,
-						proxy: config.proxy,
+					const res = await fetch(`${parent.url}/statuses`, {
 						headers: {
 							'User-Agent': 'misskey'
 						}
-					}, (err, res, body) => {
-						if (err) {
-							console.error(err);
-							return;
-						}
-						const parentStatuses = JSON.parse(body);
-						const parentState = parentStatuses[0].state;
-						const stillFailed = parentState == 'failure' || parentState == 'error';
-						if (stillFailed) {
-							post(`⚠️BUILD STILL FAILED⚠️: ?[${commit.commit.message}](${commit.html_url})`);
-						} else {
-							post(`🚨BUILD FAILED🚨: →→→?[${commit.commit.message}](${commit.html_url})←←←`);
-						}
 					});
+
+					if (!res.ok) {
+						console.error(res.status);
+						return;
+					}
+
+					const body = await res.text();
+					const parentStatuses = JSON.parse(body);
+					const parentState = parentStatuses[0].state;
+					const stillFailed = parentState == 'failure' || parentState == 'error';
+					if (stillFailed) {
+						post(`⚠️BUILD STILL FAILED⚠️: ?[${commit.commit.message}](${commit.html_url})`);
+					} else {
+						post(`🚨BUILD FAILED🚨: →→→?[${commit.commit.message}](${commit.html_url})←←←`);
+					}
+
 					break;
 			}
 			break;
