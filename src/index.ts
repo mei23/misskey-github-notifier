@@ -91,7 +91,7 @@ async function handle(type: string, event: any) {
 		case 'push': {
 			const ref = event.ref;
 			switch (ref) {
-				case 'refs/heads/master':	// masterをデフォルトブランチに置き換える
+				case `refs/heads/${config.branch || 'master'}`:
 					const pusher = event.pusher;
 					const compare = event.compare;
 					const commits: any[] = event.commits;
