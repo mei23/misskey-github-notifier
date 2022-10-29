@@ -30,8 +30,8 @@ router.post('/github', ctx => {
 	const event = ctx.request.body;
 	const body = JSON.stringify(event);
 	const hash = crypto.createHmac('sha1', secret).update(body).digest('hex');
-	const sig1 = new Buffer(ctx.headers['x-hub-signature']);
-	const sig2 = new Buffer(`sha1=${hash}`);
+	const sig1 = Buffer.from(ctx.headers['x-hub-signature']);
+	const sig2 = Buffer.from(`sha1=${hash}`);
 
 	// シグネチャ比較
 	if (sig1.equals(sig2)) {
