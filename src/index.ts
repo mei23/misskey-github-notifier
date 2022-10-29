@@ -177,7 +177,7 @@ async function handle(type: string, event: any) {
 			console.log(`skip: ${type}`);
 			if (config.debug) {
 				const body = JSON.stringify(event, null ,2);
-				post(`type: ${type}\n` + '```json\n' + body + '\n```');
+				post(`type: ${type}\n`);
 			}
 		}
 	}
