@@ -3,7 +3,7 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as bodyParser from 'koa-bodyparser';
 import * as request from 'request';
-const crypto = require('crypto');
+import * as crypto from 'crypto';
 const config = require('../config.json');
 
 const post = async (text: string, home = true) => {
