@@ -1,6 +1,5 @@
 import { createServer } from 'http';
-//import * as h3 from 'h3';
-const h3 = require('h3');
+import * as h3 from 'h3';
 import fetch from 'node-fetch';
 import * as crypto from 'crypto';
 const config = require('../config.json');
