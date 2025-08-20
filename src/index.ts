@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import * as crypto from 'crypto';
 const config = require('../config.json');
 
-const post = async (text: string, home = true) => {
+const post = async (text: string, home = false) => {
 	await fetch(config.instance + '/api/notes/create', {
 		method: 'post',
 		body: JSON.stringify({
